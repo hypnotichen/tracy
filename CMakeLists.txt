@@ -24,7 +24,7 @@ add_library(TracyClient ${TRACY_VISIBILITY} "${TRACY_PUBLIC_DIR}/TracyClient.cpp
 target_compile_features(TracyClient PUBLIC cxx_std_11)
 target_include_directories(TracyClient SYSTEM PUBLIC
     $<BUILD_INTERFACE:${TRACY_PUBLIC_DIR}>
-    $<INSTALL_INTERFACE:include>)
+    $<INSTALL_INTERFACE:external/include/tracy>)
 target_link_libraries(
     TracyClient
     PUBLIC
@@ -130,18 +130,19 @@ set(common_includes
     ${TRACY_PUBLIC_DIR}/common/TracyUwp.hpp
     ${TRACY_PUBLIC_DIR}/common/TracyYield.hpp)
 
+MESSAGE("Tracy CMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX}")
 install(TARGETS TracyClient
         EXPORT TracyConfig
-        RUNTIME  DESTINATION ${CMAKE_INSTALL_BINDIR}
-        LIBRARY  DESTINATION ${CMAKE_INSTALL_LIBDIR}
-        ARCHIVE  DESTINATION ${CMAKE_INSTALL_LIBDIR})
+        RUNTIME  DESTINATION ${CMAKE_INSTALL_PREFIX}/external/lib
+        LIBRARY  DESTINATION ${CMAKE_INSTALL_PREFIX}/external/lib
+        ARCHIVE  DESTINATION ${CMAKE_INSTALL_PREFIX}/external/lib)
 install(FILES ${tracy_includes}
-        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/tracy)
+        DESTINATION ${CMAKE_INSTALL_PREFIX}/external/include/tracy/trach)
 install(FILES ${client_includes}
-        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/client)
+        DESTINATION ${CMAKE_INSTALL_PREFIX}/external/include/tracy/client)
 install(FILES ${common_includes}
-        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/common)
+        DESTINATION ${CMAKE_INSTALL_PREFIX}/external/include/tracy/common)
 install(EXPORT TracyConfig
         NAMESPACE Tracy::
         FILE TracyConfig.cmake
-        DESTINATION share/Tracy)
+        DESTINATION external/lib/cmake/Tracy)
